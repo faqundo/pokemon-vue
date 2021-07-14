@@ -8,15 +8,17 @@
         to Trainers in the Pokémon world.
       </p>
     </div>
-    <button class="button-start">
-      <div>Get started</div>
-    </button>
+    <router-link to="/about">
+      <button class="button-start">
+        <div>Get started</div>
+      </button>
+    </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: "Welcome",
   props: {
     msg: String,
   },
@@ -75,6 +77,7 @@ img {
 }
 
 .button-start {
+  cursor:pointer;
   border: none;
   flex-direction: row;
   padding: 11px 20px;
@@ -84,6 +87,11 @@ img {
 
   background: #f22539;
   border-radius: 60px;
+
+}
+
+.button-start:hover {
+  background-color: #e60b21
 }
 
 .button-start > div {

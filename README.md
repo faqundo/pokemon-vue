@@ -22,3 +22,10 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## Steps
+1) Install Vue
+2) Build Welcome page
+3) Import fonts
+4) Install vue-rouoter
