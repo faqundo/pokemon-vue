@@ -1,28 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Welcome msg="Welcome to Pokédex" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+/* import HelloWorld from './components/HelloWorld.vue' */
+import Welcome from "./components/Welcome.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Welcome,
+  },
+};
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background: #f9f9f9;
+}
+body {
+  margin: 0;
+  background: #f9f9f9;
 }
 </style>
