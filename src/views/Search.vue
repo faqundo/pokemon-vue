@@ -4,20 +4,21 @@
     <span class="material-icons search">search</span>
     <input type="text" class="input" placeholder="Search" />
 
-    <!-- ERROR
-    <h1 class="title">Uh-oh!</h1>
-    <div class="div-subtitle">
-      <p class="subtitle">
-        You look lost on your journey!
-      </p>
+    <div class="body-search">
+      
     </div>
-    <router-link to="/about">
-        <Button msg="Go back home"/>
-    </router-link> -->
-    <div class="body-search"></div>
     <div>
       <div class="footer">
-        <ButtonSearch icon="format_list_bulleted" msg="All" url="/Casa"/>
+        <a @click="test()">
+          <span class="material-icons search">search</span>
+          <span>test</span>
+        </a>
+        <ButtonSearch
+          icon="format_list_bulleted"
+          msg="All"
+          url="/Casa"
+          @click="confirmRemove()"
+        />
         <div class="space"></div>
         <ButtonSearch icon="star" msg="Favorites" url="/About" />
       </div>
@@ -27,11 +28,72 @@
 
 <script>
 import ButtonSearch from "@/components/ButtonSearch.vue";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   name: "Search",
   components: {
     ButtonSearch,
+  },
+  created () {
+    const thisIns = this;
+
+    axios.get('https://pokeapi.co/api/v2/pokemon')
+      .then((response) => {
+        /* alert(JSON.stringify(response)) */
+        thisIns.pokemonList = response.data.results
+      })
+      .catch((error) => { 
+        console.log('ERROR,', error)
+      });
+
+    this.isMounted = true
+  },
+
+  data() {
+    return {
+      pokemonList: [],
+    };
+  },
+  methods: {
+    test() {
+      alert(JSON.stringify(this.pokemonList));
+    },
+    create() {
+      this.$router.push("/admin/grantee_cohort/create").catch(() => {});
+    },
+    edit(id) {
+      this.$router.push("/admin/grantee_cohort/edit/" + id).catch(() => {});
+    },
+    confirmRemove(id, i) {
+      Swal.fire({
+        title: `Are you sure you want to delete?`,
+        text: `You can´t undo this action.`,
+        icon: "warning",
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.value) {
+          this.remove(id, i);
+        }
+      });
+    },
+    remove(id, i) {
+      axios
+        .delete(`/api/grantee_cohort/${id}`, this.granteeCohort)
+        .then((res) => {
+          if (res.status === 200) {
+            //toastr.success('Faq saved successfully', 'Success');
+            this.granteeCohorts.splice(i, 1);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {});
+    },
   },
 };
 </script>
