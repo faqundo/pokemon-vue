@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
     <router-link to="/">Home</router-link>
     <router-link to="/loading">Loading</router-link>
     <router-link to="/search">Search</router-link>
@@ -19,3 +20,16 @@ export default {
   }),
 };
 </script>
+
+<style>
+#app {
+  background: #f9f9f9;
+  text-align: center;
+  color: #2c3e50;
+}
+body {
+  margin: 0;
+  background: #f9f9f9;
+}
+</style>
+
