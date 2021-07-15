@@ -1,7 +1,7 @@
 <template>
   <div class="welcome">
     <img alt="Welcome pikachu logo" src="../assets/welcome.png" />
-    <h1 class="title">{{ msg }}</h1>
+    <h1 class="title">Welcome to Pokédex</h1>
     <div class="div-subtitle">
       <p class="subtitle">
         The digital encyclopedia created by Professor Oak is an invaluable tool
@@ -9,27 +9,26 @@
       </p>
     </div>
     <router-link to="/about">
-      <button class="button-start">
-        <div>Get started</div>
-      </button>
+      <Button msg="Get started"/>
     </router-link>
   </div>
 </template>
 
 <script>
+import Button from '@/components/Button.vue'
+
 export default {
   name: "Welcome",
-  props: {
-    msg: String,
-  },
+  components: {
+    Button
+  }
 };
 </script>
-
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 body {
   margin: 0;
   text-align: center;
@@ -60,12 +59,11 @@ img {
 
 .subtitle {
   margin: auto;
-  height: 54px;
   width: 500px;
 
   font-family: Lato;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 18px;
   line-height: 150%;
 
@@ -76,40 +74,4 @@ img {
   margin-bottom: 30px;
 }
 
-.button-start {
-  cursor:pointer;
-  border: none;
-  flex-direction: row;
-  padding: 11px 20px;
-
-  width: 131px;
-  height: 44px;
-
-  background: #f22539;
-  border-radius: 60px;
-
-}
-
-.button-start:hover {
-  background-color: #e60b21
-}
-
-.button-start > div {
-  width: 91px;
-  height: 22px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #ffffff;
-
-  /* Inside Auto Layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 0;
-}
 </style>

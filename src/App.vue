@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
+      <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet">
       <router-link to="/">Home</router-link> |
       <router-link to="/Loading">Loading</router-link> |
       <router-link to="/Search">Search</router-link> |
