@@ -29,3 +29,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 2) Build Welcome page
 3) Import fonts
 4) Install vue-rouoter
+5) Build other views and components
+6) Install axios & vuetify
