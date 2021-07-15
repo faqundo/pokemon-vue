@@ -1,11 +1,17 @@
 <template>
-  <div>
+  <div v-if="url">
     <router-link :to="{ path: url }">
       <button class="button-start">
         <span class="material-icons">{{ icon ? icon : "" }}</span>
         <div class="footer-btn">{{ msg }}</div>
       </button>
     </router-link>
+  </div>
+  <div v-else>
+    <button class="button-start">
+      <span class="material-icons">{{ icon ? icon : "" }}</span>
+      <div class="footer-btn">{{ msg }}</div>
+    </button>
   </div>
 </template>
 
@@ -61,6 +67,7 @@ a {
 .material-icons {
   font-size: 22px;
   padding: 0 6px;
+  color: #FFFFFF;
 }
 
 </style>

@@ -17,7 +17,7 @@
     <div class="body-search"></div>
     <div>
       <div class="footer">
-        <ButtonSearch icon="format_list_bulleted" msg="Alls" url="/Casa"/>
+        <ButtonSearch icon="format_list_bulleted" msg="All" url="/Casa"/>
         <div class="space"></div>
         <ButtonSearch icon="star" msg="Favorites" url="/About" />
       </div>
