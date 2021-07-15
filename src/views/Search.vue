@@ -5,7 +5,93 @@
     <input type="text" class="input" placeholder="Search" />
 
     <div class="body-search">
-      
+        <div v-for="(item, index) in pokemonList" :key="index">
+          {{ item.name }}
+        </div>
+      <!-- <vs-table max-items="25" pagination :data="pokemonList">
+        <template slot="thead">
+          <vs-th>Name</vs-th>
+          <vs-th class="w-24"></vs-th>
+        </template>
+
+        <template slot-scope="{ data }">
+          <vs-tr :key="indextr" v-for="(tr, indextr) in data">
+            <vs-td :data="data[indextr].name">
+              {{ data[indextr].name }}
+            </vs-td>
+            <vs-td>
+              <a @click="edit(data[indextr].id)">
+                <feather-icon
+                  icon="EditIcon"
+                  svgClasses="h-4 w-4"
+                  class="mr-2"
+                />
+                <span></span>
+              </a>
+              <a @click="confirmRemove(data[indextr].id, indextr)">
+                <feather-icon
+                  icon="TrashIcon"
+                  svgClasses="h-4 w-4"
+                  class="mr-2"
+                />
+                <span></span>
+              </a>
+            </vs-td>
+
+            <template class="expand-user" slot="expand">
+              <div class="con-expand-users w-full">
+                <div class="con-btns-user flex items-center justify-between">
+                  <div class="con-userx flex items-center justify-start">
+                    <span>Capacities</span>
+                  </div>
+                  <div class="flex">
+                    <vs-button
+                      @click="createCapacity(data[indextr].id)"
+                      type="border"
+                      size="small"
+                      icon-pack="feather"
+                      icon="icon-plus"
+                      class="mr-2"
+                    ></vs-button>
+                  </div>
+                </div>
+                <vs-list class="mt-4">
+                  <vs-list-item
+                    :key="indexitem"
+                    v-for="(item, indexitem) in data[indextr].capacities"
+                    icon-pack="feather"
+                    icon="icon-octagon"
+                    :title="item.name"
+                  >
+                    <div class="flex">
+                      <a @click="editCapacity(item.id)">
+                        <feather-icon
+                          icon="EditIcon"
+                          svgClasses="h-4 w-4"
+                          class="mr-2"
+                        />
+                        <span></span>
+                      </a>
+                      <a
+                        @click="
+                          confirmRemoveCapacity(item.id, indextr, indexitem)
+                        "
+                      >
+                        <feather-icon
+                          icon="TrashIcon"
+                          svgClasses="h-4 w-4"
+                          class="mr-2"
+                        />
+                        <span></span>
+                      </a>
+                    </div>
+                  </vs-list-item>
+                </vs-list>
+              </div>
+            </template>
+          </vs-tr>
+        </template>
+      </vs-table> -->
     </div>
     <div>
       <div class="footer">
@@ -36,19 +122,20 @@ export default {
   components: {
     ButtonSearch,
   },
-  created () {
+  created() {
     const thisIns = this;
 
-    axios.get('https://pokeapi.co/api/v2/pokemon')
+    axios
+      .get("https://pokeapi.co/api/v2/pokemon")
       .then((response) => {
         /* alert(JSON.stringify(response)) */
-        thisIns.pokemonList = response.data.results
+        thisIns.pokemonList = response.data.results;
       })
-      .catch((error) => { 
-        console.log('ERROR,', error)
+      .catch((error) => {
+        console.log("ERROR,", error);
       });
 
-    this.isMounted = true
+    this.isMounted = true;
   },
 
   data() {
