@@ -44,21 +44,43 @@
     >
       <!--  {{JSON.stringify(pokemonItem)}} -->
       <div class="poke-modal-header">
-        <img :src="image" alt="pokemon image" class="pokemon">
+        <img :src="image" alt="pokemon image" class="pokemon" />
       </div>
       <div class="poke-modal-body">
-        <p>Name: {{pokemonItem.name ? pokemonItem.name.charAt(0).toUpperCase() + pokemonItem.name.slice(1) :''}}</p>
-        <p>Weight: {{pokemonItem ? pokemonItem.weight : ''}}</p>
-        <p>Height: {{pokemonItem ? pokemonItem.height : ''}}</p>
-        <p>Types: 
-          <span v-for="(item,key) of types" :key="key">
-            {{types ? item.type.name.charAt(0).toUpperCase() + item.type.name.slice(1) : ''}}
+        <p>
+          Name:
+          <span>{{
+            pokemonItem.name
+              ? pokemonItem.name.charAt(0).toUpperCase() +
+                pokemonItem.name.slice(1)
+              : ""
+          }}</span>
+        </p>
+        <p>
+          Weight: <span>{{ pokemonItem ? pokemonItem.weight : "" }}</span>
+        </p>
+        <p>
+          Height: <span>{{ pokemonItem ? pokemonItem.height : "" }}</span>
+        </p>
+        <p>
+          Types:
+          <span v-for="(item, key) of types" :key="key">
+            {{
+              types
+                ? item.type.name.charAt(0).toUpperCase() +
+                  item.type.name.slice(1)
+                : ""
+            }}
             <span v-if="key != Object.keys(types).length - 1">, </span>
           </span>
         </p>
       </div>
+      <textarea id="textoACopiar" hidden rows="6" cols="40">
+Texto que queremos copiar al portapapeles!
+    </textarea
+      >
       <div class="poke-modal-footer">
-        <a class="btn-share">
+        <a class="btn-share" @click="copy()">
           <span>Share to my friends</span>
         </a>
         <div class="star-container">
@@ -102,8 +124,9 @@ export default {
       inputSearch: "",
       modalShow: false,
       pokemonItem: [],
-      types:[],
-      image:'',
+      types: [],
+      image: "",
+      res: ''
     };
   },
   methods: {
@@ -116,7 +139,8 @@ export default {
           /* alert(JSON.stringify(response.data)) */
           thisIns.pokemonItem = response.data;
           thisIns.types = thisIns.pokemonItem.types;
-          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          thisIns.image =
+            thisIns.pokemonItem.sprites.other.dream_world.front_default;
         })
         .catch((error) => {
           console.log("ERROR,", error);
@@ -136,6 +160,16 @@ export default {
       this.currentPage = 1;
 
       this.getData();
+    },
+    copy() {
+      
+      var codigoACopiar = document.getElementById("textoACopiar");
+      var seleccion = document.createRange();
+      seleccion.selectNodeContents(codigoACopiar);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(seleccion);
+      this.res = document.execCommand("copy");
+      window.getSelection().removeRange(seleccion);
     },
     confirmRemove(id, i) {
       Swal.fire({
@@ -175,6 +209,7 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
 .container {
   position: relative;
   width: 1152px;
@@ -246,7 +281,7 @@ export default {
   overflow: hidden;
   text-align: center;
 }
-.poke-modal-header>img {
+.poke-modal-header > img {
   width: 180px;
   height: 180px;
   margin-top: 13px;
@@ -255,6 +290,20 @@ export default {
   padding: 0px;
   padding-top: 231px;
   height: 506px;
+}
+.poke-modal-body > p {
+  line-height: 27px;
+  font-weight: 700;
+  font-family: Lato;
+  font-style: normal;
+  font-size: 18px;
+  border-bottom: solid 1px;
+  border-color: #e8e8e8;
+  margin: 10px 20px;
+  padding-bottom: 10px;
+}
+.poke-modal-body > p > span {
+  font-weight: 500;
 }
 .poke-modal-footer {
   display: flex;
@@ -272,6 +321,7 @@ export default {
   text-align: center;
   padding: 10px;
   text-decoration: none;
+  cursor: pointer;
 }
 .btn-share > span {
   color: #ffffff;
@@ -295,6 +345,6 @@ export default {
   padding-bottom: 8px;
   font-size: 26px;
   vertical-align: -webkit-baseline-middle;
-  color: #ECA539;
+  color: #eca539;
 }
 </style>
