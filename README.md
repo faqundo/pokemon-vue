@@ -32,3 +32,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 5) Build other views and components
 6) Install axios & vuetify
 7) npm install vue-infinite-scroll --save & npm install --save vue-virtual-scroller
+8) npm install vue bootstrap bootstrap-vue

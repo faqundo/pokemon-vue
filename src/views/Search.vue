@@ -2,62 +2,71 @@
 <template>
   <div>
     <span class="material-icons search">search</span>
-    <input type="text" class="input" placeholder="Search" v-model="inputSearch"  @change="handleSearch" @keyup.enter="handleSearch"/><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
+    <input
+      type="text"
+      class="input"
+      placeholder="Search"
+      v-model="inputSearch"
+      @change="handleSearch"
+      @keyup.enter="handleSearch"
+    /><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
 
     <div class="body-search">
       <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
-          <v-card-text>
-            {{ item.name }}
-          </v-card-text>
+          <a @click="test(item.url)">
+            <v-card-text>
+              {{ item.name }}
+            </v-card-text>
+          </a>
         </v-card>
       </v-list-item>
     </div>
     <div>
       <div class="footer">
-        <a data-bs-toggle="modal" data-bs-target="#exampleModal">
-          <span class="material-icons search">search</span>
-          <span>test</span>
+        <div class="buttons-footer">
+          <ButtonSearch
+            icon="format_list_bulleted"
+            msg="All"
+            url="/Casa"
+            @click="search()"
+          />
+          <ButtonSearch icon="star" msg="Favorites" url="/About" />
+        </div>
+      </div>
+    </div>
+    <b-modal
+      v-model="modalShow"
+      hide-header
+      hide-footer
+      centered
+      modal-body-class="modal"
+    >
+      <!--  {{JSON.stringify(pokemonItem)}} -->
+      <div class="poke-modal-header">
+        <img :src="image" alt="pokemon image" class="pokemon">
+      </div>
+      <div class="poke-modal-body">
+        <p>Name: {{pokemonItem.name ? pokemonItem.name.charAt(0).toUpperCase() + pokemonItem.name.slice(1) :''}}</p>
+        <p>Weight: {{pokemonItem ? pokemonItem.weight : ''}}</p>
+        <p>Height: {{pokemonItem ? pokemonItem.height : ''}}</p>
+        <p>Types: 
+          <span v-for="(item,key) of types" :key="key">
+            {{types ? item.type.name.charAt(0).toUpperCase() + item.type.name.slice(1) : ''}}
+            <span v-if="key != Object.keys(types).length - 1">, </span>
+          </span>
+        </p>
+      </div>
+      <div class="poke-modal-footer">
+        <a class="btn-share">
+          <span>Share to my friends</span>
         </a>
-        <ButtonSearch
-          icon="format_list_bulleted"
-          msg="All"
-          url="/Casa"
-          @click="search()"
-        />
-        <div class="space"></div>
-        <ButtonSearch 
-          icon="star" 
-          msg="Favorites" 
-          url="/About" 
-        />
+        <div class="star-container">
+          <span class="material-icons star">star</span>
+        </div>
       </div>
-    </div>
-  <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
+    </b-modal>
   </div>
-</div>
-  </div>
-
 </template>
 
 <script>
@@ -90,12 +99,30 @@ export default {
     return {
       pokemonList: [],
       model: 1,
-      inputSearch:''
+      inputSearch: "",
+      modalShow: false,
+      pokemonItem: [],
+      types:[],
+      image:'',
     };
   },
   methods: {
-    test() {
-      alert(JSON.stringify(this.pokemonList));
+    test(url) {
+      const thisIns = this;
+
+      axios
+        .get(url)
+        .then((response) => {
+          /* alert(JSON.stringify(response.data)) */
+          thisIns.pokemonItem = response.data;
+          thisIns.types = thisIns.pokemonItem.types;
+          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
+        })
+        .catch((error) => {
+          console.log("ERROR,", error);
+        });
+
+      this.modalShow = !this.modalShow;
     },
     create() {
       this.$router.push("/admin/grantee_cohort/create").catch(() => {});
@@ -105,7 +132,7 @@ export default {
     },
     handleSearch() {
       alert(JSON.stringify(this.inputSearch));
-      this.currentTerm = 1
+      this.currentTerm = 1;
       this.currentPage = 1;
 
       this.getData();
@@ -201,7 +228,73 @@ export default {
   background: #ffffff;
   box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.05);
 }
-.space {
-  margin: 0 25px;
+.buttons-footer {
+  justify-content: space-between;
+  width: 570px;
+  display: flex;
+}
+.modal {
+  padding: 0;
+}
+.poke-modal-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url("../assets/pokemonBG.png");
+  height: 431px;
+  width: 568px;
+  overflow: hidden;
+  text-align: center;
+}
+.poke-modal-header>img {
+  width: 180px;
+  height: 180px;
+  margin-top: 13px;
+}
+.poke-modal-body {
+  padding: 0px;
+  padding-top: 231px;
+  height: 506px;
+}
+.poke-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-share {
+  position: absolute;
+  height: 44px !important;
+  width: 195px !important;
+  left: 30px;
+  bottom: 29px;
+  background-color: #f22539;
+  border-radius: 60px;
+  text-align: center;
+  padding: 10px;
+  text-decoration: none;
+}
+.btn-share > span {
+  color: #ffffff;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+}
+.star-container {
+  background: #f5f5f5;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: 30px;
+  bottom: 35px;
+  border-radius: 100%;
+  text-align: center;
+}
+.star {
+  padding-bottom: 8px;
+  font-size: 26px;
+  vertical-align: -webkit-baseline-middle;
+  color: #ECA539;
 }
 </style>
