@@ -8,9 +8,7 @@
         to Trainers in the Pokémon world.
       </p>
     </div>
-    <router-link to="/about">
-      <Button msg="Get started"/>
-    </router-link>
+      <Button msg="Get started" url="/search"/>
   </div>
 </template>
 

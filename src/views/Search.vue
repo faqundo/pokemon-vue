@@ -2,20 +2,20 @@
 <template>
   <div>
     <span class="material-icons search">search</span>
-    <input type="text" class="input" placeholder="Search" />
+    <input type="text" class="input" placeholder="Search" v-model="inputSearch"  @change="handleSearch" @keyup.enter="handleSearch"/><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
 
     <div class="body-search">
       <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
           <v-card-text>
-            {{item.name}}
+            {{ item.name }}
           </v-card-text>
         </v-card>
       </v-list-item>
     </div>
     <div>
       <div class="footer">
-        <a @click="test()">
+        <a data-bs-toggle="modal" data-bs-target="#exampleModal">
           <span class="material-icons search">search</span>
           <span>test</span>
         </a>
@@ -23,13 +23,41 @@
           icon="format_list_bulleted"
           msg="All"
           url="/Casa"
-          @click="confirmRemove()"
+          @click="search()"
         />
         <div class="space"></div>
-        <ButtonSearch icon="star" msg="Favorites" url="/About" />
+        <ButtonSearch 
+          icon="star" 
+          msg="Favorites" 
+          url="/About" 
+        />
+      </div>
+    </div>
+  <!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
+</div>
+  </div>
+
 </template>
 
 <script>
@@ -62,6 +90,7 @@ export default {
     return {
       pokemonList: [],
       model: 1,
+      inputSearch:''
     };
   },
   methods: {
@@ -73,6 +102,13 @@ export default {
     },
     edit(id) {
       this.$router.push("/admin/grantee_cohort/edit/" + id).catch(() => {});
+    },
+    handleSearch() {
+      alert(JSON.stringify(this.inputSearch));
+      this.currentTerm = 1
+      this.currentPage = 1;
+
+      this.getData();
     },
     confirmRemove(id, i) {
       Swal.fire({
@@ -151,7 +187,7 @@ export default {
   width: 570px;
   padding: 20px;
 }
-.card-element>div {
+.card-element > div {
   padding: 0;
 }
 
