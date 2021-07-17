@@ -15,18 +15,23 @@
       <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
           <!-- <a @click="getPokemon(item.url)"> -->
-            <v-card-text class="card-item">
-              <div class="card-item-text" @click="getPokemon(item.url)">
-                {{
-                  item.name
-                    ? item.name.charAt(0).toUpperCase() + item.name.slice(1)
-                    : ""
-                }}
-              </div>
-              <div class="card-item-img">
-                <img class="favorite" src="../assets/Active.png" alt="favorite-start" />
-              </div>
-            </v-card-text>
+          <v-card-text class="card-item">
+            <div class="card-item-text" @click="getPokemon(item.url)">
+              {{
+                item.name
+                  ? item.name.charAt(0).toUpperCase() + item.name.slice(1)
+                  : ""
+              }}
+            </div>
+            <div class="card-item-img">
+              <img
+                class="favorite"
+                @click="addFavorite(item.name)"
+                :src="getImageUrl(item.name)"
+                alt="favorite-start"
+              />
+            </div>
+          </v-card-text>
           <!-- </a> -->
         </v-card>
       </v-list-item>
@@ -116,7 +121,7 @@
 import ButtonSearch from "@/components/ButtonSearch.vue";
 import Loading from "@/components/Loading.vue";
 import axios from "axios";
-import Swal from "sweetalert2";
+/* import Swal from "sweetalert2"; */
 
 
 export default {
@@ -140,7 +145,16 @@ export default {
 
     this.isMounted = true;
   },
-
+  mounted() {
+    if (localStorage.getItem('favorites')) {
+      try {
+        this.favorites = JSON.parse(localStorage.getItem('favorites'));
+      } catch(e) {
+        localStorage.removeItem('favorites');
+      }
+    }
+  },
+  
   data() {
     return {
       pokemonList: [],
@@ -149,12 +163,29 @@ export default {
       modalShow: false,
       modalShowLoading: false,
       pokemonItem: [],
+      favorites: [],
       types: [],
       image: "",
       res: "",
     };
   },
+  /* watch: {
+    favorites(newFavorites) {
+      localStorage.favorites = newFavorites;
+    }
+  }, */
   methods: {
+    getImageUrl(item){
+      if(this.favorites.includes(item)){
+        return require('../assets/Active.png')
+      }else {
+        return require('../assets/Disabled.png')
+      }
+    },
+    saveFavorites() {
+      const parsed = JSON.stringify(this.favorites);
+      localStorage.setItem('favorites', parsed);
+    },
     getPokemon(url) {
       const thisIns = this;
       this.modalShowLoading = !this.modalShowLoading;
@@ -175,17 +206,20 @@ export default {
           console.log("ERROR,", error);
         });
     },
-    mounted () {
-      /* eslint-disable*/
-      $('.favorite').click(function(){
-        alert('hola')
-      });
+    addFavorite(item) {
+      if(this.favorites.includes(item)){
+        this.removeFavorite(this.favorites,item)
+      }else{
+        this.favorites.push(item);
+        this.saveFavorites()
+      }
     },
-    create() {
-      this.$router.push("/admin/grantee_cohort/create").catch(() => {});
-    },
-    edit(id) {
-      this.$router.push("/admin/grantee_cohort/edit/" + id).catch(() => {});
+    removeFavorite(array,element) {
+      let index = array.indexOf(element);
+      if (index !== -1) {
+        this.favorites.splice(index, 1);
+        this.saveFavorites()
+      }
     },
     handleSearch() {
       alert(JSON.stringify(this.inputSearch));
@@ -202,34 +236,6 @@ export default {
       window.getSelection().addRange(seleccion);
       this.res = document.execCommand("copy");
       window.getSelection().removeRange(seleccion);
-    },
-    confirmRemove(id, i) {
-      Swal.fire({
-        title: `Are you sure you want to delete?`,
-        text: `You can´t undo this action.`,
-        icon: "warning",
-        confirmButtonText: "Yes",
-        cancelButtonText: "Cancel",
-        showCancelButton: true,
-      }).then((result) => {
-        if (result.value) {
-          this.remove(id, i);
-        }
-      });
-    },
-    remove(id, i) {
-      axios
-        .delete(`/api/grantee_cohort/${id}`, this.granteeCohort)
-        .then((res) => {
-          if (res.status === 200) {
-            //toastr.success('Faq saved successfully', 'Success');
-            this.granteeCohorts.splice(i, 1);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {});
     },
   },
 };
@@ -281,6 +287,9 @@ export default {
   text-align: center;
   width: 570px;
   padding: 0;
+  margin: 10px 0;
+  height: 60px;
+  padding: 17px 20px !important;
 }
 .card-element > div {
   padding: 0;
@@ -288,7 +297,7 @@ export default {
 .card-item {
   display: flex;
   justify-content: space-between;
-  padding: 17px 20px!important;
+  padding: 0;
 }
 
 .card-item-text {
@@ -299,12 +308,9 @@ export default {
   line-height: 26px;
   color: #353535;
   align-items: center;
-  padding: inherit;
-  padding-top: 25px;
   cursor: pointer;
 }
 .card-item-img {
-  padding: inherit;
   cursor: pointer;
 }
 
