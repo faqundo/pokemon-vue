@@ -26,8 +26,8 @@
             <div class="card-item-img">
               <img
                 class="favorite"
-                @click="addFavorite(item.name)"
-                :src="getImageUrl(item.name)"
+                @click="addFavorite(item)"
+                :src="getImageUrl(item)"
                 alt="favorite-start"
               />
             </div>
@@ -39,13 +39,17 @@
     <div>
       <div class="footer">
         <div class="buttons-footer">
-          <ButtonSearch
-            icon="format_list_bulleted"
-            msg="All"
-            url="/Casa"
-            @click="search()"
-          />
-          <ButtonSearch icon="star" msg="Favorites" url="/About" />
+          <div @click="getAll()">
+            <ButtonSearch
+              icon="format_list_bulleted"
+              msg="All"
+              url="/Search"
+            />
+
+          </div>
+          <div @click="getFavorites()">
+            <ButtonSearch icon="star" msg="Favorites"  />
+          </div>
         </div>
       </div>
     </div>
@@ -137,6 +141,7 @@ export default {
       .get("https://pokeapi.co/api/v2/pokemon")
       .then((response) => {
         /* alert(JSON.stringify(response)) */
+        thisIns.pokemonListOriginal = response.data.results;
         thisIns.pokemonList = response.data.results;
       })
       .catch((error) => {
@@ -158,6 +163,7 @@ export default {
   data() {
     return {
       pokemonList: [],
+      pokemonListOriginal: [],
       model: 1,
       inputSearch: "",
       modalShow: false,
@@ -169,11 +175,7 @@ export default {
       res: "",
     };
   },
-  /* watch: {
-    favorites(newFavorites) {
-      localStorage.favorites = newFavorites;
-    }
-  }, */
+  
   methods: {
     getImageUrl(item){
       if(this.favorites.includes(item)){
@@ -195,8 +197,7 @@ export default {
           /* alert(JSON.stringify(response.data)) */
           thisIns.pokemonItem = response.data;
           thisIns.types = thisIns.pokemonItem.types;
-          thisIns.image =
-            thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
           setTimeout(() => {
             thisIns.modalShowLoading = !thisIns.modalShowLoading;
             thisIns.modalShow = !thisIns.modalShow;
@@ -209,8 +210,10 @@ export default {
     addFavorite(item) {
       if(this.favorites.includes(item)){
         this.removeFavorite(this.favorites,item)
+        alert(JSON.stringify(this.favorites))
       }else{
         this.favorites.push(item);
+        alert(JSON.stringify(this.favorites))
         this.saveFavorites()
       }
     },
@@ -237,6 +240,12 @@ export default {
       this.res = document.execCommand("copy");
       window.getSelection().removeRange(seleccion);
     },
+    getFavorites() {
+      this.pokemonList = this.favorites
+    },
+    getAll() {
+      this.pokemonList = this.pokemonListOriginal
+    }
   },
 };
 </script>

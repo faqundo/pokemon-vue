@@ -8,7 +8,7 @@
     </router-link>
   </div>
   <div v-else>
-    <button class="button-start">
+    <button class="button-start" >
       <span class="material-icons">{{ icon ? icon : "" }}</span>
       <div class="footer-btn">{{ msg }}</div>
     </button>
@@ -23,6 +23,7 @@ export default {
     url: String,
     icon: String,
   },
+  
 };
 </script>
 
@@ -67,9 +68,8 @@ a {
 .material-icons {
   font-size: 22px;
   padding: 0 6px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
-
 </style>
 
 
