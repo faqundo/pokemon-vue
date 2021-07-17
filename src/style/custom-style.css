@@ -1,0 +1,12 @@
+.modal-loading {
+    background: none!important;
+    border: none!important;
+    text-align: center!important;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 570px!important;
+      margin: 1.75rem auto;
+    }
+}

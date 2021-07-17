@@ -14,7 +14,7 @@
     <div class="body-search">
       <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
-          <a @click="test(item.url)">
+          <a @click="getPokemon(item.url)">
             <v-card-text>
               {{ item.name }}
             </v-card-text>
@@ -75,9 +75,9 @@
           </span>
         </p>
       </div>
-      <textarea id="textoACopiar" hidden rows="6" cols="40">
-Texto que queremos copiar al portapapeles!
-    </textarea
+      <textarea id="textoACopiar" rows="6" cols="40">
+        Texto que queremos copiar al portapapeles!
+      </textarea
       >
       <div class="poke-modal-footer">
         <a class="btn-share" @click="copy()">
@@ -88,11 +88,24 @@ Texto que queremos copiar al portapapeles!
         </div>
       </div>
     </b-modal>
+    <b-modal 
+      v-model="modalShowLoading"
+      hide-header
+      hide-footer
+      centered
+      modal-body-class="modal-loading"
+      content-class="modal-loading"
+      body-class="modal-loading"
+      hide
+      >
+     <Loading id="loadingImg" class="modal-dialog"/>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import ButtonSearch from "@/components/ButtonSearch.vue";
+import Loading from "@/components/Loading.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -100,6 +113,7 @@ export default {
   name: "Search",
   components: {
     ButtonSearch,
+    Loading,
   },
   created() {
     const thisIns = this;
@@ -123,30 +137,33 @@ export default {
       model: 1,
       inputSearch: "",
       modalShow: false,
+      modalShowLoading: false,
       pokemonItem: [],
       types: [],
       image: "",
-      res: ''
+      res: '',
     };
   },
   methods: {
-    test(url) {
+    getPokemon(url) {
       const thisIns = this;
-
+      this.modalShowLoading = !this.modalShowLoading;
       axios
         .get(url)
         .then((response) => {
           /* alert(JSON.stringify(response.data)) */
           thisIns.pokemonItem = response.data;
           thisIns.types = thisIns.pokemonItem.types;
-          thisIns.image =
-            thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          setTimeout(()=>{ 
+            thisIns.modalShowLoading = !thisIns.modalShowLoading;
+            thisIns.modalShow = !thisIns.modalShow;}, 1000);
+          
         })
         .catch((error) => {
           console.log("ERROR,", error);
         });
 
-      this.modalShow = !this.modalShow;
     },
     create() {
       this.$router.push("/admin/grantee_cohort/create").catch(() => {});
@@ -210,6 +227,15 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
+/* #loadingImg {
+  position: absolute;
+  top: 100px;
+  left: 46%;
+} */
+.modal-loading{
+  background: none!important;
+  border: none!important;
+} 
 .container {
   position: relative;
   width: 1152px;
@@ -280,6 +306,7 @@ export default {
   width: 568px;
   overflow: hidden;
   text-align: center;
+  border-radius: 5px
 }
 .poke-modal-header > img {
   width: 180px;

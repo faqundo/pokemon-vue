@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "Loader",
+  name: "Loading",
 };
 </script>
 
@@ -20,15 +20,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
-.loading-image {
-  margin-top: 200px;
-}
 
 #loading {
+  border-radius: 100%;
   display: inline-block;
   vertical-align: -0.125em;
   background-color: currentColor;
   -webkit-animation: 1s linear infinite spinner-grow;
   animation: 1s linear infinite spinner-grow;
+  opacity: 0.5
 }
 </style>
