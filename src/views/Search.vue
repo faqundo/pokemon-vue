@@ -14,11 +14,20 @@
     <div class="body-search">
       <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
-          <a @click="getPokemon(item.url)">
-            <v-card-text>
-              {{ item.name }}
+          <!-- <a @click="getPokemon(item.url)"> -->
+            <v-card-text class="card-item">
+              <div class="card-item-text" @click="getPokemon(item.url)">
+                {{
+                  item.name
+                    ? item.name.charAt(0).toUpperCase() + item.name.slice(1)
+                    : ""
+                }}
+              </div>
+              <div class="card-item-img">
+                <img class="favorite" src="../assets/Active.png" alt="favorite-start" />
+              </div>
             </v-card-text>
-          </a>
+          <!-- </a> -->
         </v-card>
       </v-list-item>
     </div>
@@ -35,6 +44,7 @@
         </div>
       </div>
     </div>
+
     <b-modal
       v-model="modalShow"
       hide-header
@@ -77,8 +87,7 @@
       </div>
       <textarea id="textoACopiar" rows="6" cols="40">
         Texto que queremos copiar al portapapeles!
-      </textarea
-      >
+      </textarea>
       <div class="poke-modal-footer">
         <a class="btn-share" @click="copy()">
           <span>Share to my friends</span>
@@ -88,7 +97,7 @@
         </div>
       </div>
     </b-modal>
-    <b-modal 
+    <b-modal
       v-model="modalShowLoading"
       hide-header
       hide-footer
@@ -97,8 +106,8 @@
       content-class="modal-loading"
       body-class="modal-loading"
       hide
-      >
-     <Loading id="loadingImg" class="modal-dialog"/>
+    >
+      <Loading id="loadingImg" class="modal-dialog" />
     </b-modal>
   </div>
 </template>
@@ -108,6 +117,7 @@ import ButtonSearch from "@/components/ButtonSearch.vue";
 import Loading from "@/components/Loading.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+
 
 export default {
   name: "Search",
@@ -141,7 +151,7 @@ export default {
       pokemonItem: [],
       types: [],
       image: "",
-      res: '',
+      res: "",
     };
   },
   methods: {
@@ -154,16 +164,22 @@ export default {
           /* alert(JSON.stringify(response.data)) */
           thisIns.pokemonItem = response.data;
           thisIns.types = thisIns.pokemonItem.types;
-          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
-          setTimeout(()=>{ 
+          thisIns.image =
+            thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          setTimeout(() => {
             thisIns.modalShowLoading = !thisIns.modalShowLoading;
-            thisIns.modalShow = !thisIns.modalShow;}, 1000);
-          
+            thisIns.modalShow = !thisIns.modalShow;
+          }, 1000);
         })
         .catch((error) => {
           console.log("ERROR,", error);
         });
-
+    },
+    mounted () {
+      /* eslint-disable*/
+      $('.favorite').click(function(){
+        alert('hola')
+      });
     },
     create() {
       this.$router.push("/admin/grantee_cohort/create").catch(() => {});
@@ -179,7 +195,6 @@ export default {
       this.getData();
     },
     copy() {
-      
       var codigoACopiar = document.getElementById("textoACopiar");
       var seleccion = document.createRange();
       seleccion.selectNodeContents(codigoACopiar);
@@ -227,15 +242,7 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
-/* #loadingImg {
-  position: absolute;
-  top: 100px;
-  left: 46%;
-} */
-.modal-loading{
-  background: none!important;
-  border: none!important;
-} 
+
 .container {
   position: relative;
   width: 1152px;
@@ -273,10 +280,32 @@ export default {
   background: white;
   text-align: center;
   width: 570px;
-  padding: 20px;
+  padding: 0;
 }
 .card-element > div {
   padding: 0;
+}
+.card-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 17px 20px!important;
+}
+
+.card-item-text {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 26px;
+  color: #353535;
+  align-items: center;
+  padding: inherit;
+  padding-top: 25px;
+  cursor: pointer;
+}
+.card-item-img {
+  padding: inherit;
+  cursor: pointer;
 }
 
 .footer {
@@ -306,7 +335,7 @@ export default {
   width: 568px;
   overflow: hidden;
   text-align: center;
-  border-radius: 5px
+  border-radius: 5px;
 }
 .poke-modal-header > img {
   width: 180px;
