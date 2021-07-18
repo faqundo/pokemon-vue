@@ -92,9 +92,7 @@
           </span>
         </p>
       </div>
-      <textarea id="textoACopiar" rows="6" cols="40">
-        Texto que queremos copiar al portapapeles!
-      </textarea>
+      
       <div class="poke-modal-footer">
         <a class="btn-share" @click="copy()">
           <span>Share to my friends</span>
@@ -151,10 +149,21 @@ export default {
     if (localStorage.getItem("favoritesAux")) {
       try {
         this.favoritesAux = JSON.parse(localStorage.getItem("favoritesAux"));
+        
+      } catch (e) {
+        localStorage.removeItem("favoritesAux");
+      }
+    }
+
+    if (localStorage.getItem("favorites")) {
+      try {
+        this.favorites = JSON.parse(localStorage.getItem("favorites"));
+        
       } catch (e) {
         localStorage.removeItem("favorites");
       }
     }
+
     this.isMounted = true;
   },
 
@@ -173,7 +182,8 @@ export default {
       types: [],
       image: "",
       res: "",
-      favoritesAux:[]
+      favoritesAux:[],
+      searchResult:[]
     };
   },
   computed: {},
@@ -247,20 +257,21 @@ export default {
       }
     },
     handleSearch() {
-      alert(JSON.stringify(this.inputSearch));
-      this.currentTerm = 1;
-      this.currentPage = 1;
-
-      this.getData();
-    },
-    copy() {
-      var codigoACopiar = document.getElementById("textoACopiar");
-      var seleccion = document.createRange();
-      seleccion.selectNodeContents(codigoACopiar);
-      window.getSelection().removeAllRanges();
-      window.getSelection().addRange(seleccion);
-      this.res = document.execCommand("copy");
-      window.getSelection().removeRange(seleccion);
+      let thisIns = this;
+      let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
+      let url = baseUrl + `${this.inputSearch}`
+      let searchResult = new Object();
+      axios
+        .get(url)
+        .then((response) => {
+              searchResult.name = response.data.name;
+              searchResult.url = baseUrl + response.data.id;
+          thisIns.pokemonList = searchResult;
+        })
+        .catch((error) => {
+          alert('error')
+          console.log("ERROR,", error);
+        });
     },
     getFavorites() {
       this.pokemonList = this.favorites;
