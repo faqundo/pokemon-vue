@@ -2,11 +2,13 @@
   <div>
       <h1 class="title">Uh-oh!</h1>
     <div class="div-subtitle">
-      <p class="subtitle">
+      <p class="subtitle" >
         You look lost on your journey!
       </p>
     </div>
-        <Button msg="Go back home" url="/Casa"/>
+    <div @click="setData">
+        <Button msg="Go back home" url="/Search"/>
+    </div>
   </div>
 </template>
 
@@ -14,6 +16,11 @@
 import Button from "@/components/Button.vue";
 
 export default {
+  data() {
+    return {
+      
+    }
+  },
   name: "ErrorSearch",
   components: {
     Button,
@@ -23,6 +30,11 @@ export default {
     url: String,
     icon: String,
   },
+  methods:{
+    setData() {
+      this.$emit('getData',false)
+    }
+  }
 };
 </script>
 

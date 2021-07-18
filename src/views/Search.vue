@@ -38,7 +38,7 @@
       </v-list-item>
     </div>
     <div v-else>
-      <ErrorResult/>
+      <ErrorResult @getData = "getData"/>
     </div>
     <div>
       <div class="footer">
@@ -293,6 +293,10 @@ export default {
       this.errorShow = false;
       this.pokemonList = this.pokemonListOriginal;
     },
+    getData(data) {
+      this.errorShow = data;
+      this.inputSearch = ''
+    }
   },
 };
 </script>
