@@ -188,12 +188,11 @@ export default {
       favoritesAux: [],
       searchResult: [],
       errorShow: false,
-      selectUrl:''
+      selectUrl: "",
     };
   },
   computed: {},
-  watch: {
-  },
+  watch: {},
   methods: {
     getImageFav(item) {
       if (this.favoritesAux.includes(item)) {

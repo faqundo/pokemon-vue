@@ -12,6 +12,7 @@ import '../src/style/custom-style.css'
 import VueClipboard from 'vue-clipboard2'
 
 Vue.use(VueClipboard)
+VueClipboard.config.autoSetContainer = true
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
