@@ -11,7 +11,7 @@
       @keyup.enter="handleSearch"
     /><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
 
-    <div class="body-search">
+    <div class="body-search" v-if="errorShow === false">
       <v-list-item
         v-for="(item, i) in pokemonList"
         :key="i"
@@ -37,6 +37,9 @@
         </v-card>
       </v-list-item>
     </div>
+    <div v-else>
+      <ErrorResult/>
+    </div>
     <div>
       <div class="footer">
         <div class="buttons-footer">
@@ -61,7 +64,7 @@
       <div class="poke-modal-header">
         <img :src="image" alt="pokemon image" class="pokemon" />
       </div>
-      <div class="poke-modal-body">
+      <div class="poke-modal-body" >
         <p>
           Name:
           <span>{{
@@ -112,12 +115,14 @@
     >
       <Loading id="loadingImg" class="modal-dialog" />
     </b-modal>
+    
   </div>
 </template>
 
 <script>
 import ButtonSearch from "@/components/ButtonSearch.vue";
 import Loading from "@/components/Loading.vue";
+import ErrorResult from "@/components/ErrorResult.vue";
 import axios from "axios";
 /* import Swal from "sweetalert2"; */
 
@@ -126,6 +131,7 @@ export default {
   components: {
     ButtonSearch,
     Loading,
+    ErrorResult,
   },
   created() {
     const thisIns = this;
@@ -181,7 +187,8 @@ export default {
       image: "",
       res: "",
       favoritesAux:[],
-      searchResult:[]
+      searchResult:[],
+      errorShow: false,
     };
   },
   computed: {},
@@ -223,6 +230,7 @@ export default {
           }, 1000);
         })
         .catch((error) => {
+          thisIns.errorShow = true;
           console.log("ERROR,", error);
         });
     },
@@ -258,7 +266,7 @@ export default {
       let thisIns = this;
       let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
       let url = baseUrl + `${this.inputSearch}`
-      
+      this.errorShow = false;
       if(this.inputSearch !== '') {
         axios
           .get(url)
@@ -270,7 +278,7 @@ export default {
             thisIns.pokemonList.push(searchResult);
           })
           .catch((error) => {
-            alert('error')
+            thisIns.errorShow = true;
             console.log("ERROR,", error);
           });
       } else {
@@ -278,9 +286,11 @@ export default {
       }
     },
     getFavorites() {
+      this.errorShow = false;
       this.pokemonList = this.favorites;
     },
     getAll() {
+      this.errorShow = false;
       this.pokemonList = this.pokemonListOriginal;
     },
   },
