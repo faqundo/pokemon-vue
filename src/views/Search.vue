@@ -12,7 +12,10 @@
     /><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
 
     <div class="body-search">
-      <v-list-item v-for="(item, i) in pokemonList" :key="i">
+      <v-list-item
+        v-for="(item, i) in pokemonList"
+        :key="i"
+      >
         <v-card elevation="2" tile class="card-element">
           <!-- <a @click="getPokemon(item.url)"> -->
           <v-card-text class="card-item">
@@ -24,10 +27,10 @@
               }}
             </div>
             <div class="card-item-img">
-              <img
+              <b-img
                 class="favorite"
                 @click="addFavorite(item)"
-                :src="getImageUrl(item)"
+                :src="getImageFav(item.name)"
                 alt="favorite-start"
               />
             </div>
@@ -40,15 +43,10 @@
       <div class="footer">
         <div class="buttons-footer">
           <div @click="getAll()">
-            <ButtonSearch
-              icon="format_list_bulleted"
-              msg="All"
-              url="/Search"
-            />
-
+            <ButtonSearch icon="format_list_bulleted" msg="All" url="/Search" />
           </div>
           <div @click="getFavorites()">
-            <ButtonSearch icon="star" msg="Favorites"  />
+            <ButtonSearch icon="star" msg="Favorites" />
           </div>
         </div>
       </div>
@@ -127,7 +125,6 @@ import Loading from "@/components/Loading.vue";
 import axios from "axios";
 /* import Swal from "sweetalert2"; */
 
-
 export default {
   name: "Search",
   components: {
@@ -147,21 +144,24 @@ export default {
       .catch((error) => {
         console.log("ERROR,", error);
       });
-
-    this.isMounted = true;
+    this.isCreated = true;
+    
   },
   mounted() {
-    if (localStorage.getItem('favorites')) {
+    if (localStorage.getItem("favoritesAux")) {
       try {
-        this.favorites = JSON.parse(localStorage.getItem('favorites'));
-      } catch(e) {
-        localStorage.removeItem('favorites');
+        this.favoritesAux = JSON.parse(localStorage.getItem("favoritesAux"));
+      } catch (e) {
+        localStorage.removeItem("favorites");
       }
     }
+    this.isMounted = true;
   },
-  
+
   data() {
     return {
+      isMounted: false,
+      isCreated: false,
       pokemonList: [],
       pokemonListOriginal: [],
       model: 1,
@@ -173,20 +173,30 @@ export default {
       types: [],
       image: "",
       res: "",
+      favoritesAux:[]
     };
   },
-  
+  computed: {},
+  watch: {
+    favorites(nuevoValor, valorAnterior) {
+      console.log("El nombre pasó de ser %s a %s", valorAnterior, nuevoValor);
+    },
+  },
   methods: {
-    getImageUrl(item){
-      if(this.favorites.includes(item)){
-        return require('../assets/Active.png')
-      }else {
-        return require('../assets/Disabled.png')
-      }
+    getImageFav(item) {
+        if (this.favoritesAux.includes(item)) {
+          return require("../assets/Active.png");
+        } else {
+          return require("../assets/Disabled.png");
+        }
     },
     saveFavorites() {
       const parsed = JSON.stringify(this.favorites);
-      localStorage.setItem('favorites', parsed);
+      localStorage.setItem("favorites", parsed);
+    },
+    saveFavoritesAux() {
+      const parsed = JSON.stringify(this.favoritesAux);
+      localStorage.setItem("favoritesAux", parsed);
     },
     getPokemon(url) {
       const thisIns = this;
@@ -197,7 +207,8 @@ export default {
           /* alert(JSON.stringify(response.data)) */
           thisIns.pokemonItem = response.data;
           thisIns.types = thisIns.pokemonItem.types;
-          thisIns.image = thisIns.pokemonItem.sprites.other.dream_world.front_default;
+          thisIns.image =
+            thisIns.pokemonItem.sprites.other.dream_world.front_default;
           setTimeout(() => {
             thisIns.modalShowLoading = !thisIns.modalShowLoading;
             thisIns.modalShow = !thisIns.modalShow;
@@ -208,20 +219,31 @@ export default {
         });
     },
     addFavorite(item) {
-      if(this.favorites.includes(item)){
-        this.removeFavorite(this.favorites,item)
-        alert(JSON.stringify(this.favorites))
-      }else{
+      if (this.favorites.includes(item)) {
+        this.removeFavorite(this.favorites, item);
+      } else {
         this.favorites.push(item);
-        alert(JSON.stringify(this.favorites))
-        this.saveFavorites()
+        this.saveFavorites();
+      }
+      if (this.favoritesAux.includes(item.name)) {
+        this.removeFavoriteAux(this.favoritesAux, item);
+      } else {
+        this.favoritesAux.push(item.name);
+        this.saveFavoritesAux();
       }
     },
-    removeFavorite(array,element) {
+    removeFavorite(array, element) {
       let index = array.indexOf(element);
       if (index !== -1) {
         this.favorites.splice(index, 1);
-        this.saveFavorites()
+        this.saveFavorites();
+      }
+    },
+    removeFavoriteAux(array, element) {
+      let index = array.indexOf(element);
+      if (index !== -1) {
+        this.favoritesAux.splice(index, 1);
+        this.saveFavoritesAux();
       }
     },
     handleSearch() {
@@ -241,11 +263,11 @@ export default {
       window.getSelection().removeRange(seleccion);
     },
     getFavorites() {
-      this.pokemonList = this.favorites
+      this.pokemonList = this.favorites;
     },
     getAll() {
-      this.pokemonList = this.pokemonListOriginal
-    }
+      this.pokemonList = this.pokemonListOriginal;
+    },
   },
 };
 </script>
