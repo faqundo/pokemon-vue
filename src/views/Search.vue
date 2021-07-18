@@ -17,7 +17,6 @@
         :key="i"
       >
         <v-card elevation="2" tile class="card-element">
-          <!-- <a @click="getPokemon(item.url)"> -->
           <v-card-text class="card-item">
             <div class="card-item-text" @click="getPokemon(item.url)">
               {{
@@ -35,7 +34,6 @@
               />
             </div>
           </v-card-text>
-          <!-- </a> -->
         </v-card>
       </v-list-item>
     </div>
@@ -260,13 +258,15 @@ export default {
       let thisIns = this;
       let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
       let url = baseUrl + `${this.inputSearch}`
-      let searchResult = new Object();
+      
       axios
         .get(url)
         .then((response) => {
+          let searchResult = new Object();
               searchResult.name = response.data.name;
               searchResult.url = baseUrl + response.data.id;
-          thisIns.pokemonList = searchResult;
+          thisIns.pokemonList = [];
+          thisIns.pokemonList.push(searchResult);
         })
         .catch((error) => {
           alert('error')
