@@ -237,7 +237,7 @@ export default {
         this.saveFavorites();
       }
       if (this.favoritesAux.includes(item.name)) {
-        this.removeFavoriteAux(this.favoritesAux, item);
+        this.removeFavoriteAux(this.favoritesAux, item.name);
       } else {
         this.favoritesAux.push(item.name);
         this.saveFavoritesAux();
