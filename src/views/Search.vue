@@ -259,19 +259,23 @@ export default {
       let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
       let url = baseUrl + `${this.inputSearch}`
       
-      axios
-        .get(url)
-        .then((response) => {
-          let searchResult = new Object();
-              searchResult.name = response.data.name;
-              searchResult.url = baseUrl + response.data.id;
-          thisIns.pokemonList = [];
-          thisIns.pokemonList.push(searchResult);
-        })
-        .catch((error) => {
-          alert('error')
-          console.log("ERROR,", error);
-        });
+      if(this.inputSearch !== '') {
+        axios
+          .get(url)
+          .then((response) => {
+            let searchResult = new Object();
+                searchResult.name = response.data.name;
+                searchResult.url = baseUrl + response.data.id;
+            thisIns.pokemonList = [];
+            thisIns.pokemonList.push(searchResult);
+          })
+          .catch((error) => {
+            alert('error')
+            console.log("ERROR,", error);
+          });
+      } else {
+        this.pokemonList = this.pokemonListOriginal;
+      }
     },
     getFavorites() {
       this.pokemonList = this.favorites;
