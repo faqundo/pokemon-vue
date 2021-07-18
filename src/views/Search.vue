@@ -12,10 +12,7 @@
     /><!-- @input="handleSearch()" v-on:keyup.enter="handleSearch" -->
 
     <div class="body-search" v-if="errorShow === false">
-      <v-list-item
-        v-for="(item, i) in pokemonList"
-        :key="i"
-      >
+      <v-list-item v-for="(item, i) in pokemonList" :key="i">
         <v-card elevation="2" tile class="card-element">
           <v-card-text class="card-item">
             <div class="card-item-text" @click="getPokemon(item.url)">
@@ -38,7 +35,7 @@
       </v-list-item>
     </div>
     <div v-else>
-      <ErrorResult @getData = "getData"/>
+      <ErrorResult @getData="getData" />
     </div>
     <div>
       <div class="footer">
@@ -64,7 +61,7 @@
       <div class="poke-modal-header">
         <img :src="image" alt="pokemon image" class="pokemon" />
       </div>
-      <div class="poke-modal-body" >
+      <div class="poke-modal-body">
         <p>
           Name:
           <span>{{
@@ -93,9 +90,14 @@
           </span>
         </p>
       </div>
-      
+
       <div class="poke-modal-footer">
-        <a class="btn-share" @click="copy()">
+        <a
+          class="btn-share"
+          v-clipboard:copy="selectUrl"
+          v-clipboard:success="onCopy"
+          v-clipboard:error="onError"
+        >
           <span>Share to my friends</span>
         </a>
         <div class="star-container">
@@ -115,7 +117,6 @@
     >
       <Loading id="loadingImg" class="modal-dialog" />
     </b-modal>
-    
   </div>
 </template>
 
@@ -124,6 +125,7 @@ import ButtonSearch from "@/components/ButtonSearch.vue";
 import Loading from "@/components/Loading.vue";
 import ErrorResult from "@/components/ErrorResult.vue";
 import axios from "axios";
+
 /* import Swal from "sweetalert2"; */
 
 export default {
@@ -147,13 +149,11 @@ export default {
         console.log("ERROR,", error);
       });
     this.isCreated = true;
-    
   },
   mounted() {
     if (localStorage.getItem("favoritesAux")) {
       try {
         this.favoritesAux = JSON.parse(localStorage.getItem("favoritesAux"));
-        
       } catch (e) {
         localStorage.removeItem("favoritesAux");
       }
@@ -162,7 +162,6 @@ export default {
     if (localStorage.getItem("favorites")) {
       try {
         this.favorites = JSON.parse(localStorage.getItem("favorites"));
-        
       } catch (e) {
         localStorage.removeItem("favorites");
       }
@@ -186,24 +185,22 @@ export default {
       types: [],
       image: "",
       res: "",
-      favoritesAux:[],
-      searchResult:[],
+      favoritesAux: [],
+      searchResult: [],
       errorShow: false,
+      selectUrl:''
     };
   },
   computed: {},
   watch: {
-    favorites(nuevoValor, valorAnterior) {
-      console.log("El nombre pasó de ser %s a %s", valorAnterior, nuevoValor);
-    },
   },
   methods: {
     getImageFav(item) {
-        if (this.favoritesAux.includes(item)) {
-          return require("../assets/Active.png");
-        } else {
-          return require("../assets/Disabled.png");
-        }
+      if (this.favoritesAux.includes(item)) {
+        return require("../assets/Active.png");
+      } else {
+        return require("../assets/Disabled.png");
+      }
     },
     saveFavorites() {
       const parsed = JSON.stringify(this.favorites);
@@ -214,6 +211,7 @@ export default {
       localStorage.setItem("favoritesAux", parsed);
     },
     getPokemon(url) {
+      this.selectUrl = url;
       const thisIns = this;
       this.modalShowLoading = !this.modalShowLoading;
       axios
@@ -264,16 +262,16 @@ export default {
     },
     handleSearch() {
       let thisIns = this;
-      let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
-      let url = baseUrl + `${this.inputSearch}`
+      let baseUrl = "https://pokeapi.co/api/v2/pokemon/";
+      let url = baseUrl + `${this.inputSearch}`;
       this.errorShow = false;
-      if(this.inputSearch !== '') {
+      if (this.inputSearch !== "") {
         axios
           .get(url)
           .then((response) => {
             let searchResult = new Object();
-                searchResult.name = response.data.name;
-                searchResult.url = baseUrl + response.data.id;
+            searchResult.name = response.data.name;
+            searchResult.url = baseUrl + response.data.id;
             thisIns.pokemonList = [];
             thisIns.pokemonList.push(searchResult);
           })
@@ -295,8 +293,17 @@ export default {
     },
     getData(data) {
       this.errorShow = data;
-      this.inputSearch = ''
-    }
+      this.inputSearch = "";
+    },
+    onCopy: function (e) {
+      alert(
+        "Acabas de copiar el siguiente texto en el portapapeles: " + e.text
+      );
+    },
+    onError: function (e) {
+      alert("No se pudo copiar el texto al portapapeles");
+      console.log(e);
+    },
   },
 };
 </script>
