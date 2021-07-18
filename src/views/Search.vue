@@ -90,7 +90,6 @@
           </span>
         </p>
       </div>
-
       <div class="poke-modal-footer">
         <a
           class="btn-share"
@@ -125,8 +124,7 @@ import ButtonSearch from "@/components/ButtonSearch.vue";
 import Loading from "@/components/Loading.vue";
 import ErrorResult from "@/components/ErrorResult.vue";
 import axios from "axios";
-
-/* import Swal from "sweetalert2"; */
+import Swal from "sweetalert2";
 
 export default {
   name: "Search",
@@ -294,10 +292,14 @@ export default {
       this.errorShow = data;
       this.inputSearch = "";
     },
-    onCopy: function (e) {
-      alert(
-        "Acabas de copiar el siguiente texto en el portapapeles: " + e.text
-      );
+    onCopy: function () {
+      Swal.fire({
+        title:"Good job!",
+        text:"Pokemon copied to clipboard successfully!",
+        icon:"success",
+        showConfirmButton: false,
+        timer: 1500
+      });
     },
     onError: function (e) {
       alert("No se pudo copiar el texto al portapapeles");
