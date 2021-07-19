@@ -28,7 +28,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 1) Install Vue
 2) Build Welcome page
 3) Import fonts
-4) Install vue-rouoter
+4) Install vue-router
 5) Build other views and components
 6) Install axios & vuetify
 7) npm install vue-infinite-scroll --save & npm install --save vue-virtual-scroller
