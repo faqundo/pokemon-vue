@@ -1,6 +1,6 @@
 <template>
   <div class="welcome">
-    <img alt="Welcome pikachu logo" src="../assets/welcome.png" />
+    <img alt="Welcome pikachu logo" src="../assets/welcome2.png" />
     <h1 class="title">Welcome to Pokédex</h1>
     <div class="div-subtitle">
       <p class="subtitle">
@@ -34,9 +34,10 @@ body {
   position: relative;
 }
 img {
+  margin-top: 25px;
   position: relative;
-  width: 325px;
-  height: 288px;
+  width: 335px;
+  height: 298px;
   margin-bottom: 54px;
 }
 .welcome {
