@@ -363,7 +363,8 @@ export default {
   padding: 0;
   margin: 10px 0;
   height: 65px;
-  padding: 17px 20px !important;
+  padding: 17px 20px;
+  padding-top: 10px!important;
 }
 .card-element > div {
   padding: 0;
@@ -383,6 +384,7 @@ export default {
   color: #353535;
   align-items: center;
   cursor: pointer;
+  padding-top: 10px;
 }
 .card-item-img {
   cursor: pointer;
