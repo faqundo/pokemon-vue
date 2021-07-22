@@ -101,7 +101,7 @@
           <span>Share to my friends</span>
         </a>
         <div class="star-container">
-          <span class="material-icons star">star</span>
+          <img :src="getImageFav(pokemonItem.name)" alt="" @click="addFavorite(pokemonItem)">
         </div>
       </div>
     </b-modal>
@@ -482,6 +482,9 @@ export default {
   bottom: 35px;
   border-radius: 100%;
   text-align: center;
+}
+.star-container img{
+  cursor: pointer;
 }
 .star {
   padding-bottom: 8px;
