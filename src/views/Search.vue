@@ -60,6 +60,7 @@
       <!--  {{JSON.stringify(pokemonItem)}} -->
       <div class="poke-modal-header">
         <img :src="image" alt="pokemon image" class="pokemon" />
+        <img :src="closeImg" alt="close icon" class="close-img" @click="closeModal()"/>
       </div>
       <div class="poke-modal-body">
         <p>
@@ -125,6 +126,7 @@ import Loading from "@/components/Loading.vue";
 import ErrorResult from "@/components/ErrorResult.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import closeImg from "@/assets/close.png";
 
 export default {
   name: "Search",
@@ -182,6 +184,7 @@ export default {
       favorites: [],
       types: [],
       image: "",
+      closeImg: closeImg,
       res: "",
       favoritesAux: [],
       searchResult: [],
@@ -206,6 +209,9 @@ export default {
     saveFavoritesAux() {
       const parsed = JSON.stringify(this.favoritesAux);
       localStorage.setItem("favoritesAux", parsed);
+    },
+    closeModal() {
+      this.modalShow = !this.modalShow;
     },
     getPokemon(url) {
       this.selectUrl = url;
@@ -294,11 +300,11 @@ export default {
     },
     onCopy: function () {
       Swal.fire({
-        title:"Good job!",
-        text:"Pokemon copied to clipboard successfully!",
-        icon:"success",
+        title: "Good job!",
+        text: "Pokemon copied to clipboard successfully!",
+        icon: "success",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     },
     onError: function (e) {
@@ -411,10 +417,16 @@ export default {
   text-align: center;
   border-radius: 5px;
 }
-.poke-modal-header > img {
+.poke-modal-header .pokemon {
   width: 180px;
   height: 180px;
   margin-top: 13px;
+}
+.poke-modal-header .close-img {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
 }
 .poke-modal-body {
   padding: 0px;
