@@ -356,7 +356,7 @@ export default {
   width: 570px;
   padding: 0;
   margin: 10px 0;
-  height: 60px;
+  height: 65px;
   padding: 17px 20px !important;
 }
 .card-element > div {
