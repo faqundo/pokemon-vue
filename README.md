@@ -1,5 +1,5 @@
 # pokemon
-![Alt Text](/assets/preview_app.gif))
+![](/preview_app.gif))
 ## Project setup
 ```
 npm install
