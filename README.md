@@ -1,5 +1,5 @@
 # pokemon
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Alt Text](/assets/preview_app.gif))
 ## Project setup
 ```
 npm install
