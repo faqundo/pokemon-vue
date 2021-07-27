@@ -1,5 +1,5 @@
 # pokemon
-![](/preview_app.gif))
+![App Gif](/preview_app.gif)
 ## Project setup
 ```
 npm install
